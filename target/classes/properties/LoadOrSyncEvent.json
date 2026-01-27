@@ -1,0 +1,248 @@
+[
+  {
+    "title": "Load / Sync Microsoft Calendar Event",
+    "properties": [
+
+      {
+        "label": "Target Form",
+        "type": "header",
+        "description": "Select the Joget form where Microsoft Calendar event data will be loaded.<br><br>\n\n<b>Important:</b><br>\n• The selected form must be the <b>current form</b> where this binder is applied.<br>\n• Field mappings below will refer to columns from this form only.<br>\n• Existing records will be updated if the Event ID already exists."
+      },
+      {
+        "name": "formDefId",
+        "label": "Form ID",
+        "type": "selectbox",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/forms/options",
+        "options_ajax_on_change": "formDefId",
+        "required": "true"
+      },
+
+      {
+        "label": "Basic Event Fields",
+        "type": "header",
+        "description": "Map form fields used to Load basic Microsoft Calendar event details.<br><br>\n\n<b>Includes:</b><br>\n• Event subject (title).<br>\n• Location (physical or online).<br>\n• Description or agenda text.<br><br>\n\n<b>Notes:</b><br>\n• All fields are optional, but mapping is recommended for complete synchronization.<br>\n• Values are stored as plain text."
+      },
+      {
+        "name": "subjectField",
+        "label": "Subject Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "subject"
+      },
+      {
+        "name": "locationField",
+        "label": "Location Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "location"
+      },
+      {
+        "name": "descriptionField",
+        "label": "Description Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "description"
+      },
+
+      {
+        "label": "Date & Time Fields",
+        "type": "header",
+        "description": "Configure how event start and end date/time values are loaded in the form.<br><br>\n\n<b>All-Day Events:</b><br>\n• Uses <b>From Date</b> and <b>To Date</b> fields.<br>\n• Date format must be <code>yyyy-MM-dd</code>.<br><br>\n\n<b>Timed Events:</b><br>\n• Uses <b>From Date Time</b> and <b>To Date Time</b> fields.<br>\n• Values include both date and time.<br><br>\n\n<b>Important:</b><br>\n• Date-only and Date-Time fields must be <b>separate</b>.<br>\n• The system automatically chooses which fields to use based on the All-Day flag."
+      },
+      {
+        "name": "fromDateField",
+        "label": "From Date (All Day)",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "from_date"
+      },
+      {
+        "name": "toDateField",
+        "label": "To Date (All Day)",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "to_date"
+      },
+      {
+        "name": "fromDateTimeField",
+        "label": "From Date Time",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "from_date_time"
+      },
+      {
+        "name": "toDateTimeField",
+        "label": "To Date Time",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "to_date_time"
+      },
+
+      {
+        "label": "Flags & Metadata",
+        "type": "header",
+        "description": "Boolean flags derived from Microsoft Calendar event properties.<br><br>\n\n<b>Expected Field Type:</b><br>\n• Boolean (true/false).<br><br>\n\n<b>Fields:</b><br>\n• All Day – Indicates an all-day event.<br>\n• Enable Meeting – Indicates if a Teams meeting exists.<br>\n• Is Recurring – Indicates if the event is part of a series."
+      },
+      {
+        "name": "allDayField",
+        "label": "All Day Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "all_day"
+      },
+      {
+        "name": "enableMeetingField",
+        "label": "Enable Meeting Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "enable_meeting"
+      },
+      {
+        "name": "isRecurringField",
+        "label": "Is Recurring Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "is_recurring"
+      },
+
+
+      {
+        "label": "Participants Mapping",
+        "type": "header",
+        "description": "Participants extracted from the Microsoft Calendar event.<br><br>\n\n<b>Internal Participants:</b><br>\n• Must contain <b>email addresses only</b>.<br>\n• Emails are matched against Joget users.<br>\n• Stored as <code>;</code> (semicolon) separated values.<br><br>\n\n<b>External Participants:</b><br>\n• Email addresses not found in Joget user directory.<br>\n• Also stored as <code>;</code> separated values.<br><br>\n\n<b>Recommended Field Type:</b><br>\n• Multi-select, text field, or checkbox group supporting semicolon-separated values."
+      },
+      {
+        "name": "internalParticipantsField",
+        "label": "Internal Participants Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "internal_participants"
+      },
+      {
+        "name": "externalParticipantsField",
+        "label": "External Participants Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "external_participants"
+      },
+
+      {
+        "label": "Recurrence Mapping",
+        "type": "header",
+        "description": "Fields used to populate recurring event information from Microsoft Calendar.<br><br>\n\n<b>Recurrence Type:</b><br>\n• Recommended as a dropdown/checkbox field.<br>\n• Supported values include daily, weekly, monthly, yearly.<br><br>\n\n<b>Recurrence Interval:</b><br>\n• Must be a numeric field.<br>\n• Defines frequency (e.g. every 2 weeks).<br><br>\n\n<b>Recurrence Days:</b><br>\n• Required for weekly recurrence.<br>\n• Values must be lowercase day names (e.g. monday;wednesday).<br>\n• Use multi-select or checkbox fields.<br><br>\n\n<b>Recurrence End Date:</b><br>\n• Date-only field.<br>\n• Format must be <code>yyyy-MM-dd</code>."
+      },
+      {
+        "name": "recurrenceTypeField",
+        "label": "Recurrence Type Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "recurrence_type"
+      },
+      {
+        "name": "recurrenceIntervalField",
+        "label": "Recurrence Interval Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "recurrence_interval"
+      },
+      {
+        "name": "recurrenceDaysField",
+        "label": "Recurrence Days Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "recurrence_days"
+      },
+      {
+        "name": "recurrenceEndDateField",
+        "label": "Recurrence End Date Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "recurrence_end_date"
+      },
+
+
+      {
+        "label": "Extended Property (Single Value)",
+        "type": "header",
+        "description": "Microsoft Graph singleValueExtendedProperty used to sync custom application metadata.<br><br>\n\n<b>Purpose:</b><br>\n• Store a unique business identifier (e.g. Matter ID, Reference ID).<br>\n• Enables filtering and linking events across systems.<br><br>\n\n<b>GUID Guidelines:</b><br>\n• Must be a valid UUID format.<br>\n• Example: <code>8F6C2F2A-4D4E-4C7C-A0E2-1F6E6C2A9C11</code><br>\n• The GUID should remain constant once configured.<br><br>\n\n<b>Property Name (ID) Guidelines:</b><br>\n• Must be a single identifier (no spaces).<br>\n• Use alphanumeric characters only.<br>\n• Recommended format: <code>camelCase</code> (e.g. <code>matterId</code>).<br><br>\n\n<b>Rules:</b><br>\n• Only <b>one value</b> is supported per event.<br>\n• Do <b>NOT</b> use separators such as <code>;</code>, <code>,</code>, or <code>|</code>.<br>\n• Stored as plain text in the mapped form field."
+      },
+      {
+        "name": "extendedPropGuid",
+        "label": "Extended Property GUID",
+        "type": "textfield",
+        "value": "8F6C2F2A-4D4E-4C7C-A0E2-1F6E6C2A9C11",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropName",
+        "label": "Extended Property Name",
+        "type": "textfield",
+        "value": "matterId",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropFormField",
+        "label": "Form Field for Extended Property",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "matter"
+      },
+
+      {
+        "label": "Microsoft Metadata",
+        "type": "header",
+        "description": "Optional fields used to store additional Microsoft Calendar metadata in Joget.<br><br>\n\n<b>Includes:</b><br>\n• Organizer email address.<br>\n• Series Master ID for recurring events.<br>\n• Microsoft Outlook event URL.<br>\n• Microsoft Teams meeting join link.<br><br>\n\n<b>Notes:</b><br>\n• All mappings are optional.<br>\n• Useful for reporting, navigation, and troubleshooting.<br>\n• Values are populated automatically during load or sync."
+      },
+      {
+        "name": "organizerField",
+        "label": "Organizer Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "organizer"
+      },
+      {
+        "name": "seriesMasterIdField",
+        "label": "Series Master ID Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "series_master_id"
+      },
+      {
+        "name": "eventUrlField",
+        "label": "Microsoft Event URL Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "ms_event_url"
+      },
+      {
+        "name": "meetingLinkField",
+        "label": "Teams Meeting Link Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "ms_meeting_link"
+      }
+
+    ]
+  }
+]

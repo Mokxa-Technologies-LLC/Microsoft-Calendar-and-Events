@@ -1,0 +1,33 @@
+[
+  {
+    "title": "Microsoft Event List",
+    "properties": [
+
+      {
+        "label": "Extended Property Filtering",
+        "type": "header",
+        "description": "Configure Microsoft Graph <b>singleValueExtendedProperty</b> used to filter calendar events (e.g. Matter ID).<br><br>\n\n<b>Purpose:</b><br>\n• Filter Microsoft Calendar events using a custom business identifier.<br>\n• Commonly used to group or isolate events related to a specific Matter, Case, or Reference ID.<br><br>\n\n<b>GUID & Name Guidelines:</b><br>\n• <b>GUID</b> must be a valid UUID in the format:<br>\n&nbsp;&nbsp;<code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code><br>\n• The GUID must be <b>exactly the same</b> as the one used while creating or updating events.<br>\n• <b>Name</b> must match the extended property name defined during event creation.<br>\n• GUID and Name together form a <b>single extended property identifier</b>.<br><br>\n\n<b>Rules:</b><br>\n• Only <b>one extended property</b> is supported for filtering.<br>\n• Do NOT use separators such as <code>;</code> or <code>,</code>.<br>\n• Value comparison is performed as <b>plain text</b>.<br><br>\n\n<b>Important:</b><br>\n• If either GUID or Name does not match exactly, filtering will return no results."
+      },
+      {
+        "name": "extendedPropGuid",
+        "label": "Extended Property GUID",
+        "type": "textfield",
+        "value": "8F6C2F2A-4D4E-4C7C-A0E2-1F6E6C2A9C11",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropName",
+        "label": "Extended Property Name",
+        "type": "textfield",
+        "value": "matterId",
+        "required": "true"
+      },
+
+      {
+        "label": "Technical Configuration Notes",
+        "type": "header",
+        "description": "This datalist supports multiple filtering modes using Microsoft Graph calendarView API.<br><br>\n\n<b>Built-in Time Filters:</b><br>\n• Supported values:<br>\n&nbsp;&nbsp;– <b>today</b><br>\n&nbsp;&nbsp;– <b>week</b><br>\n&nbsp;&nbsp;– <b>month</b><br>\n&nbsp;&nbsp;– <b>range</b><br><br>\n\n<b>How to Configure:</b><br>\n• Drag and drop a filter column in the datalist.<br>\n• Configure it as a <b>dropdown</b> with the following values:<br>\n&nbsp;&nbsp;<code>today, week, month, range</code><br><br>\n\n<b>Date Range Filtering:</b><br>\n• If <b>range</b> is selected:<br>\n&nbsp;&nbsp;– Drag <b>Start Date</b> and <b>End Date</b> fields into the filter section.<br>\n&nbsp;&nbsp;– Both dates must be provided for range filtering to work.<br>\n• Date format must be:<br>\n&nbsp;&nbsp;<code>yyyy-MM-dd</code><br><br>\n\n<b>Extended Property Filtering:</b><br>\n• Events can also be filtered using the configured extended property.<br>\n• Filtering will work only if:<br>\n&nbsp;&nbsp;– GUID is valid and correctly configured.<br>\n&nbsp;&nbsp;– Property Name matches exactly with the event’s stored extended property.<br>\n&nbsp;&nbsp;– The event was created or updated with this extended property.<br><br>\n\n<b>System Behavior:</b><br>\n• Time-based filters are applied first.<br>\n• Extended property filter is applied on top of the time range.<br>\n• Incorrect configuration will result in an empty list without errors."
+      }
+    ]
+  }
+]

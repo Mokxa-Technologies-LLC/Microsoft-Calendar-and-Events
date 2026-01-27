@@ -1,0 +1,64 @@
+[
+  {
+    "title": "Microsoft Calendar List",
+    "properties": [
+
+      {
+        "label": "Extended Property Configuration",
+        "type": "header",
+        "description": "Configure Microsoft Graph <b>singleValueExtendedProperty</b> used to load and display calendar events (for example, Matter ID).<br><br>\n\n<b>Purpose:</b><br>\n• Used only to <b>read and map</b> extended metadata from Microsoft Calendar events.<br>\n• Helps associate events with business entities such as Matters, Cases, or References.<br><br>\n\n<b>GUID & Name Guidelines:</b><br>\n• <b>GUID</b> must be a valid UUID in the format:<br>\n&nbsp;&nbsp;<code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code><br>\n• GUID must match the one used during event creation or update.<br>\n• <b>Name</b> must exactly match the extended property name stored in Microsoft Graph.<br>\n• GUID and Name together define a <b>single extended property</b>.<br><br>\n\n<b>Important Notes:</b><br>\n• This configuration is <b>read-only</b> in this plugin.<br>\n• <b>No filtering</b> is performed using this extended property.<br>\n• Incorrect GUID or Name will simply result in empty or missing values, without errors."
+      },
+      {
+        "name": "extendedPropGuid",
+        "label": "Extended Property GUID",
+        "type": "textfield",
+        "value": "8F6C2F2A-4D4E-4C7C-A0E2-1F6E6C2A9C11",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropName",
+        "label": "Extended Property Name",
+        "type": "textfield",
+        "value": "matterId",
+        "required": "true"
+      },
+
+      {
+        "label": "Event Color Configuration",
+        "type": "header",
+        "description": "Configure colors used to visually distinguish different types of Microsoft calendar events when displayed in Joget Calendar.<br><br>\n\n<b>Color Usage:</b><br>\n• <b>All Day Event Color</b> – Applied to events marked as all-day.<br>\n• <b>Teams Meeting Color</b> – Applied to events with Microsoft Teams meetings enabled.<br>\n• <b>Recurring Event Color</b> – Applied to recurring events.<br>\n• <b>Default Event Color</b> – Used when no specific condition is matched.<br><br>\n\n<b>Technical Notes:</b><br>\n• Colors must be valid HEX values (e.g. <code>#22c55e</code>).<br>\n• These colors are applied dynamically at runtime.<br>\n• Visual configuration does not affect event data or synchronization."
+      },
+      {
+        "name": "allDayColor",
+        "label": "All Day Event Color",
+        "type": "color",
+        "value": "#3b82f6"
+      },
+      {
+        "name": "teamsMeetingColor",
+        "label": "Teams Meeting Color",
+        "type": "color",
+        "value": "#6366f1"
+      },
+      {
+        "name": "recurringEventColor",
+        "label": "Recurring Event Color",
+        "type": "color",
+        "value": "#fb923c"
+      },
+      {
+        "name": "defaultEventColor",
+        "label": "Default Event Color",
+        "type": "color",
+        "value": "#22c55e"
+      },
+
+
+      {
+        "label": "Technical Configuration Notes",
+        "type": "header",
+        "description": "This plugin is designed to be used exclusively as a <b>data source</b> for Joget Calendar.<br><br>\n\n<b>Calendar Configuration Requirements:</b><br>\n• Always select <b>Auto Handle Date</b> in Joget Calendar configuration.<br>\n• Set <b>Data Source</b> to this plugin.<br>\n• Choose <b>24-hour format</b> for time display.<br>\n• Set date format to:<br>\n&nbsp;&nbsp;<code>yyyy-MM-dd</code><br><br>\n\n<b>Behavior:</b><br>\n• Events are loaded directly from Microsoft Calendar using Graph API.<br>\n• No filtering is applied by this plugin.<br>\n• All date handling is managed by Joget Calendar itself.<br><br>\n\n<b>Compatibility:</b><br>\n• Fully compatible with Joget Calendar.<br>\n• Supports all-day, timed, recurring, and Teams meeting events.<br>\n• Designed for display purposes only (read-only)."
+      }
+    ]
+  }
+]

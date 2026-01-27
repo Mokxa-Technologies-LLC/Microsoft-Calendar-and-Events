@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Cancel Microsoft Calendar Event",
+    "properties": [
+
+      {
+        "label": "Target Form",
+        "type": "header",
+        "description": "Select the Joget form that holds the Microsoft Calendar Event ID to be cancelled.<br><br>\n\n<b>Important:</b><br>\n• The selected form must be the <b>same form</b> used to create or sync the Microsoft event.<br>\n• The form must already contain a valid Microsoft Event ID.<br><br>\n\n<b>Behavior:</b><br>\n• This plugin will call Microsoft Graph to cancel the event.<br>\n• Cancellation does <b>not delete</b> the event; it sends a cancellation notice to all attendees."
+      },
+      {
+        "name": "formDefId",
+        "label": "Form ID",
+        "type": "selectbox",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/forms/options",
+        "options_ajax_on_change": "formDefId",
+        "required": "true"
+      },
+
+      {
+        "label": "Cancellation Mapping",
+        "type": "header",
+        "description": "Form field used to store the cancellation message sent to Microsoft Calendar attendees.<br><br>\n\n<b>Usage:</b><br>\n• The text entered here will appear in the cancellation email/notification.<br>\n• This message is optional but strongly recommended for clarity.<br><br>\n\n<b>Input Guidelines:</b><br>\n• Plain text only.<br>\n• No HTML formatting is required.<br>\n• Keep the message concise and professional.<br><br>\n\n<b>Examples:</b><br>\n• <i>\"Meeting cancelled due to scheduling conflict.\"</i><br>\n• <i>\"This event is no longer required.\"</i>"
+      },
+      {
+        "name": "commentField",
+        "label": "Cancellation Comment Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "comment",
+        "required": "true"
+      }
+
+    ]
+  }
+]

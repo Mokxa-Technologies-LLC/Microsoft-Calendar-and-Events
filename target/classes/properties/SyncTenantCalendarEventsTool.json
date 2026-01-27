@@ -1,0 +1,119 @@
+[
+  {
+    "title": "Microsoft Graph – Event Integration Configuration",
+    "properties": [
+
+      {
+        "label": "Microsoft Graph Configuration",
+        "type": "header",
+        "description": "Configure Microsoft Graph application credentials used to access tenant-wide Outlook calendar data.<br><br>\n\n<b>Purpose:</b><br>\n• Used to authenticate Microsoft Graph using <b>application permissions</b>.<br>\n• Allows the system to read calendar events for <b>all users in the tenant</b>.<br>\n• Required for background execution and scheduled sync jobs.<br><br>\n\n<b>Configuration Guidelines:</b><br>\n• <b>Tenant ID</b> – Azure AD tenant identifier (Directory ID).<br>\n• <b>Client ID</b> – Application (App Registration) ID from Azure Portal.<br>\n• <b>Client Secret</b> – Secret generated under App Registration.<br><br>\n\n<b>Important Notes:</b><br>\n• App must have Microsoft Graph <b>Calendar.Read</b> or <b>Calendars.Read</b> permissions.<br>\n• Permissions must be granted as <b>Application permissions</b> (not delegated).<br>\n• Admin consent is required.<br>\n• Credentials are used only on server-side execution."
+      },
+      {
+        "name": "tenantId",
+        "label": "Tenant ID",
+        "type": "textfield",
+        "required": "true"
+      },
+      {
+        "name": "clientId",
+        "label": "Client ID",
+        "type": "textfield",
+        "required": "true"
+      },
+      {
+        "name": "clientSecret",
+        "label": "Client Secret",
+        "type": "password",
+        "required": "true"
+      },
+
+      {
+        "label": "Target Form Configuration",
+        "type": "header",
+        "description": "Select the Joget form where synced calendar data will be stored.<br><br>\n\n<b>Behavior:</b><br>\n• Each Microsoft calendar event is converted into a new form record.<br>\n• The form acts as a <b>data store</b> for time or activity entries.<br>\n• Records are created or updated automatically by the system.<br><br>\n\n<b>Technical Notes:</b><br>\n• The selected form must already exist.<br>\n• Form table name is resolved automatically at runtime.<br>\n• This tool does not require user interaction with the form."
+      },
+      {
+        "name": "formDefId",
+        "label": "Form ID",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/forms/options",
+        "required": "true"
+      },
+
+      {
+        "label": "Extended Property Mapping",
+        "type": "header",
+        "description": "Configure Microsoft Graph <b>singleValueExtendedProperty</b> used to associate calendar events with business data.<br><br>\n\n<b>Purpose:</b><br>\n• Used to read a custom identifier stored on Microsoft calendar events.<br>\n• Common examples include Matter ID, Case ID, or Reference ID.<br>\n• Enables linking tenant-wide calendar events to internal Joget records.<br><br>\n\n<b>GUID & Name Guidelines:</b><br>\n• <b>GUID</b> must be a valid UUID in the format:<br>\n&nbsp;&nbsp;<code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code><br>\n• <b>Name</b> must exactly match the property name used during event creation.<br>\n• GUID and Name together define <b>one single extended property</b>.<br><br>\n\n<b>Rules:</b><br>\n• Only <b>one value</b> is supported per event.<br>\n• Do NOT use separators such as <code>;</code>, <code>,</code>, or multiple values.<br>\n• Value is stored as plain text in the mapped form field.<br><br>\n\n<b>Important Notes:</b><br>\n• If GUID or Name is incorrect, events will still sync but extended value will be empty.<br>\n• This property is optional but recommended for business correlation."
+      },
+      {
+        "name": "extendedPropGuid",
+        "label": "Extended Property GUID",
+        "type": "textfield",
+        "value": "8F6C2F2A-4D4E-4C7C-A0E2-1F6E6C2A9C11",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropName",
+        "label": "Extended Property Name",
+        "type": "textfield",
+        "value": "matterId",
+        "required": "true"
+      },
+      {
+        "name": "extendedPropField",
+        "label": "Target Form Field for Extended Property",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "matter_id",
+        "required": "true"
+      },
+
+      {
+        "label": "Field Mapping",
+        "type": "header",
+        "description":"Map Microsoft calendar event data to Joget form fields.<br><br>\n\n<b>Field Usage:</b><br>\n• <b>Event ID Field</b> – Stores the unique Microsoft event ID.<br>\n• <b>Event Subject Field</b> – Stores the calendar event subject/title.<br>\n• <b>User Field</b> – Stores the event owner’s email address.<br>\n• <b>Duration Field</b> – Stores calculated event duration in <code>HH:mm:ss</code> format.<br><br>\n\n<b>Technical Behavior:</b><br>\n• Only completed events are processed.<br>\n• All-day and cancelled events are skipped automatically.<br>\n• Duration is calculated using event start and end time (UTC).<br>\n• Each sync creates new records with system-generated row IDs."
+      },
+      {
+        "name": "eventIdField",
+        "label": "Event ID Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "event_id"
+      },
+      {
+        "name": "eventField",
+        "label": "Event Subject Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "event"
+      },
+      {
+        "name": "userField",
+        "label": "User Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "user"
+      },
+      {
+        "name": "durationField",
+        "label": "Duration Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "duration"
+      },
+
+      {
+        "label": "Technical Configuration Notes",
+        "type": "header",
+        "description": "This plugin is designed to run as a <b>Process Tool</b> or <b>Scheduler Plugin</b>.<br><br>\n\n<b>Execution Behavior:</b><br>\n• Runs without user interaction.<br>\n• Fetches events for all tenant users using Microsoft Graph.<br>\n• Sync window is determined using a system environment variable.<br>\n• Last successful sync time is stored automatically.<br><br>\n\n<b>Scheduling Recommendations:</b><br>\n• Can be scheduled hourly, daily, or as required.<br>\n• First run uses a fallback window of the last 24 hours.<br>\n• Subsequent runs sync only newly completed events.<br><br>\n\n<b>Reliability:</b><br>\n• Duplicate processing is avoided using sync timestamps.<br>\n• Safe to run repeatedly.<br>\n• Designed for long-running background execution."
+      }
+
+    ]
+  }
+]
