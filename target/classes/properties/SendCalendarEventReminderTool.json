@@ -1,0 +1,80 @@
+[
+  {
+    "title": "Send Calendar Event Reminder",
+    "properties": [
+
+      {
+        "label": "Target Form",
+        "type": "header",
+        "description": "Select the Joget form that stores synced Microsoft Calendar events.<br><br>\n\n<b>Important:</b><br>\n• The selected form must contain event start date/time fields.<br>\n• Reminder flags will be updated in this form.<br>\n• This tool does NOT sync from Microsoft Graph."
+      },
+      {
+        "name": "formDefId",
+        "label": "Form ID",
+        "type": "selectbox",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/forms/options",
+        "options_ajax_on_change": "formDefId",
+        "required": "true"
+      },
+
+      {
+        "label": "Event Timing Fields",
+        "type": "header",
+        "description": "Fields used to determine when reminders should be triggered.<br><br>\n\n<b>Rules:</b><br>\n• Uses <b>local user time</b> stored in the form.<br>\n• No UTC conversion is performed here.<br>\n• Reminder is calculated as <b>Event Start - Reminder Minutes</b>."
+      },
+      {
+        "name": "fromDateTimeField",
+        "label": "Event Start Date Time Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "from_date_time",
+        "required": "true"
+      },
+      {
+        "name": "allDayField",
+        "label": "All Day Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "all_day"
+      },
+
+      {
+        "label": "Reminder Configuration",
+        "type": "header",
+        "description": "Fields controlling reminder behavior.<br><br>\n\n<b>Reminder Minutes:</b><br>\n• Numeric value representing minutes before event start.<br>\n• Example: <code>15</code> means reminder is sent 15 minutes before the event.<br><br>\n\n<b>Reminder Sent Flag:</b><br>\n• Used to prevent duplicate reminders.<br>\n• Automatically updated by the tool."
+      },
+      {
+        "name": "reminderMinutes",
+        "label": "Reminder Minutes",
+        "type": "textfield",
+        "value": "15",
+        "required": "true"
+      },
+      {
+        "name": "reminderSentField",
+        "label": "Reminder Sent Field",
+        "type": "selectbox",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "value": "reminder_sent",
+        "required": "true"
+      },
+      {
+        "name": "reminderWindowMinutes",
+        "label": "Reminder Window Minutes",
+        "type": "textfield",
+        "value": "5",
+        "description": "Allowed window around reminder time to avoid missing events when scheduler delayed."
+      },
+
+      {
+        "label": "Technical Notes",
+        "type": "header",
+        "description": "This tool is designed to run as a <b>Scheduler Plugin</b> or <b>Process Tool</b>.<br><br>\n\n<b>Execution Behavior:</b><br>\n• Does NOT call Microsoft Graph.<br>\n• Reads event data from the database only.<br>\n• Safe to run every 1–5 minutes.<br>\n• Sends reminder only once per event.<br><br>\n\n<b>Recommended Schedule:</b><br>\n• Every 1 minute for near-real-time reminders.<br>\n• Every 5 minutes for reduced load."
+      }
+
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+[{
+  "title": "MS Graph Token Refresh Tool",
+  "properties": [{
+    "name": "clientSecret",
+    "label": "Azure Client Secret",
+    "type": "password",
+    "required": "true",
+    "value": "",
+    "description": "The same client secret configured in the Graph API Connect plugin. Client ID and Tenant ID will be extracted from the database."
+  }, {
+    "name": "refreshWindowMinutes",
+    "label": "Refresh Window (Minutes)",
+    "type": "textfield",
+    "required": "false",
+    "value": "15",
+    "description": "Refresh tokens if they expire within this many minutes. Default: 15 minutes"
+  }]
+}]

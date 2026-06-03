@@ -1,0 +1,51 @@
+[
+  {
+    "title": "Microsoft Graph Configuration",
+    "properties": [
+      {
+        "name": "clientId",
+        "label": "Client ID",
+        "description": "Azure Application ID",
+        "type": "textfield",
+        "required": "true"
+      },
+      {
+        "name": "clientSecret",
+        "label": "Client Secret",
+        "description": "Azure Application Client Secret",
+        "type": "password",
+        "required": "true"
+      },
+      {
+        "name": "tenantId",
+        "label": "Tenant ID",
+        "description": "Azure Tenant ID",
+        "type": "textfield",
+        "value": "common"
+      },
+      {
+        "name": "successRedirectUrl",
+        "label": "Success Redirect URL (Menu)",
+        "description": "Menu to redirect after login",
+        "type": "textfield",
+        "value": "",
+        "required": "true"
+      },
+      {
+        "name": "scopes",
+        "label": "OAuth Scopes",
+        "description": "Space separated list of Microsoft Graph scopes",
+        "type": "textfield",
+        "value": "openid profile offline_access User.Read",
+        "required": "true"
+      },
+      {
+        "name": "redirectUri",
+        "label": "Redirect URI",
+        "description": "OAuth redirect URI for webService callback. Format: {contextPath}/web/json/plugin/org.joget.marketplace.lmsgraph.GraphApiConnectMenu/service. Use the same url in Azure AD app registration.",
+        "type": "textfield",
+        "required": "true"
+      }
+    ]
+  }
+]

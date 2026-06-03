@@ -251,6 +251,20 @@
         "options_ajax_on_change": "formDefId",
         "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
         "value": "ms_meeting_link"
+      },
+      {
+        "label": "API Builder Configuration",
+        "type": "header",
+        "description": "Used only when this form is executed through API Builder.<br><br><b>Purpose:</b><br>Allows passing username in API payload instead of using current logged-in user.<br>Required when events are created from external systems.<br><br><b>Important:</b><br>This field is optional.<br>If not configured, plugin will use current Joget user.<br>If configured, API payload MUST include this field.<br><br><b>Example payload:</b><br><code>{ \"api_username\": \"user@company.com\" }</code>"
+      },
+      {
+        "name": "apiUsernameField",
+        "label": "API Username Field",
+        "type": "selectbox",
+        "required": "false",
+        "options_ajax_on_change": "formDefId",
+        "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
+        "description": "Form field that contains username/email to be used for Microsoft Graph operations. Used only for API calls."
       }
     ]
   }

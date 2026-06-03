@@ -1,13 +1,16 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1769349833820
+Bnd-LastModified: 1778245608107
 Build-Jdk-Spec: 17
-Bundle-Activator: org.mokxa.plugins.Activator
+Bundle-Activator: org.joget.mokxa.Activator
 Bundle-ClassPath: .,dependency/httpclient-4.5.13.jar,dependency/httpcore
  -4.4.13.jar,dependency/commons-logging-1.2.jar,dependency/commons-codec
- -1.11.jar,dependency/httpmime-4.5.1.jar
+ -1.11.jar,dependency/httpmime-4.5.1.jar,dependency/fluent-hc-4.5.13.jar
+ ,dependency/jackson-databind-2.12.3.jar,dependency/jackson-annotations-
+ 2.12.3.jar,dependency/jackson-core-2.12.3.jar,dependency/commons-io-2.8
+ .0.jar,dependency/commons-lang3-3.11.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: microsoft-calendar-and-events
-Bundle-SymbolicName: org.mokxa.plugins.microsoft-calendar-and-events
+Bundle-SymbolicName: org.joget.mokxa.microsoft-calendar-and-events
 Bundle-Version: 9.0.0.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin 5.1.9
 DynamicImport-Package: *
@@ -21,7 +24,14 @@ Embedded-Artifacts: dependency/httpclient-4.5.13.jar;g="org.apache.httpc
  ogging-1.2.jar;g="commons-logging";a="commons-logging";v="1.2",dependen
  cy/commons-codec-1.11.jar;g="commons-codec";a="commons-codec";v="1.11",
  dependency/httpmime-4.5.1.jar;g="org.apache.httpcomponents";a="httpmime
- ";v="4.5.1"
+ ";v="4.5.1",dependency/fluent-hc-4.5.13.jar;g="org.apache.httpcomponent
+ s";a="fluent-hc";v="4.5.13",dependency/jackson-databind-2.12.3.jar;g="c
+ om.fasterxml.jackson.core";a="jackson-databind";v="2.12.3",dependency/j
+ ackson-annotations-2.12.3.jar;g="com.fasterxml.jackson.core";a="jackson
+ -annotations";v="2.12.3",dependency/jackson-core-2.12.3.jar;g="com.fast
+ erxml.jackson.core";a="jackson-core";v="2.12.3",dependency/commons-io-2
+ .8.0.jar;g="commons-io";a="commons-io";v="2.8.0",dependency/commons-lan
+ g3-3.11.jar;g="org.apache.commons";a="commons-lang3";v="3.11"
 Import-Package: org.joget.report.dao,org.joget.report.model,org.joget.re
  port.service,org.joget.commons.util,org.joget.plugin.base,org.joget.plu
  gin.property.model,org.joget.plugin.property.service,org.joget.director
@@ -36,9 +46,14 @@ Import-Package: org.joget.report.dao,org.joget.report.model,org.joget.re
  userview.service,org.joget.apps.workflow.lib,org.osgi.framework;version
  ="1.3.0"
 Joget-Description: An enterprise-grade Microsoft Outlook Calendar integr
- ation suite for Joget.Supports event creation, update, cancellation, sy
- nchronization, listing, calendar views, Teams meetings, recurrence, and
-  tenant-wide background sync using Microsoft Graph API.
+ ation suite for Joget.This suite provides complete Microsoft Graph inte
+ gration including event creation, update, cancellation, synchronization
+ , listing, calendar views, Teams meeting support, recurrence handling, 
+ and tenant-wide background sync.Additional features include push notifi
+ cation reminders before events, Microsoft Graph login integration for s
+ ecure authentication, automatic token storage in Joget database, and a 
+ scheduler service to refresh expired access tokens to maintain uninterr
+ upted connectivity.
 Joget-Name: Microsoft Calendar and Events Integration Suite
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=17))"
 Tool: Bnd-6.3.1.202206071316
