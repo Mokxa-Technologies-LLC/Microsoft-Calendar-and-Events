@@ -83,6 +83,18 @@
         "options_ajax_on_change": "formDefId",
         "options_ajax": "[CONTEXT_PATH]/web/json/console/app[APP_PATH]/form/columns/options",
         "value": "to_date_time"
+      },{
+        "name": "is24Format",
+        "label": "Use 24 Hour Time Format",
+        "type": "checkbox",
+        "value": "true",
+        "options": [
+          {
+            "value": "true",
+            "label": "Yes"
+          }
+        ],
+        "description": "Enable this if From Date Time and To Date Time values are in 24-hour format, for example 2026-07-07 18:30. Disable if values are in 12-hour format, for example 2026-07-07 06:30 PM."
       },
 
       {

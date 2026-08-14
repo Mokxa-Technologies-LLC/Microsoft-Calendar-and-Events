@@ -60,6 +60,8 @@ public class CalendarList extends DataListBinderDefault {
         FormRowSet rowSet = new FormRowSet();
 
         CURRENT_USERNAME= WorkflowUtil.getCurrentUsername();
+        String is24Format = getPropertyString("is24Format");
+        boolean use24Format = "true".equalsIgnoreCase(is24Format);
 
         start =0;
         rows=10;
@@ -124,6 +126,11 @@ public class CalendarList extends DataListBinderDefault {
                         startTimeValue = startLocal.substring(11);
                         endDateValue   = endLocal.substring(0, 10);
                         endTimeValue   = endLocal.substring(11);
+
+                        if (!use24Format) {
+                            startTimeValue = convert24HourTimeTo12Hour(startTimeValue);
+                            endTimeValue   = convert24HourTimeTo12Hour(endTimeValue);
+                        }
                     }
 
                     String participants = "";
@@ -160,22 +167,22 @@ public class CalendarList extends DataListBinderDefault {
 
 
                     String allDayColor =
-                            Optional.ofNullable(getPropertyString("allDayColor")).orElse("#3b82f6");
+                            Optional.ofNullable(getPropertyString("allDayColor")).orElse("");
 
                     String teamsColor =
                             Optional.ofNullable(getPropertyString("teamsMeetingColor")).orElse("#6366f1");
 
                     String recurringColor =
-                            Optional.ofNullable(getPropertyString("recurringEventColor")).orElse("#fb923c");
+                            Optional.ofNullable(getPropertyString("recurringEventColor")).orElse("");
 
                     String defaultColor =
                             Optional.ofNullable(getPropertyString("defaultEventColor")).orElse("#22c55e");
 
                     String color =
-                            allDay ? allDayColor
+                            (allDay && !allDayColor.isEmpty()) ? allDayColor
                                     : hasTeams ? teamsColor
-                                    : isRecurring ? recurringColor
-                                    : defaultColor;
+                                      : (isRecurring && !recurringColor.isEmpty()) ? recurringColor
+                                        : defaultColor;
 
                     FormRow row = new FormRow();
                     row.setProperty("id", id);
@@ -201,11 +208,11 @@ public class CalendarList extends DataListBinderDefault {
                     rowSet.add(row);
                     count++;
 
-                    LogUtil.info("Event: "+count,
-                                    startDateValue + " → " + endDateValue + "  " +
-                                            startTimeValue + " → " + endTimeValue +
-                                    " | allDay=" + allDay + " " +subject
-                    );
+//                    LogUtil.info("Event: "+count,
+//                                    startDateValue + " → " + endDateValue + "  " +
+//                                            startTimeValue + " → " + endTimeValue +
+//                                    " | allDay=" + allDay + " " +subject
+//                    );
 
 
 
@@ -269,19 +276,19 @@ public class CalendarList extends DataListBinderDefault {
     private void logFilters(DataListFilterQueryObject[] filters) {
 
         if (filters == null || filters.length == 0) {
-            LogUtil.info(getClass().getName(), "No filters applied");
+//            LogUtil.info(getClass().getName(), "No filters applied");
             return;
         }
 
         for (int i = 0; i < filters.length; i++) {
             DataListFilterQueryObject f = filters[i];
 
-            LogUtil.info(getClass().getName(),
-                    "Filter[" + i + "]" +
-                            " | query=" + f.getQuery() +
-                            " | operator=" + f.getOperator() +
-                            " | values=" + Arrays.toString(f.getValues())
-            );
+//            LogUtil.info(getClass().getName(),
+//                    "Filter[" + i + "]" +
+//                            " | query=" + f.getQuery() +
+//                            " | operator=" + f.getOperator() +
+//                            " | values=" + Arrays.toString(f.getValues())
+//            );
         }
     }
 
@@ -344,6 +351,29 @@ public class CalendarList extends DataListBinderDefault {
         }
 
         return "String {" + guid + "} Name " + name;
+    }
+
+    private String convert24HourTimeTo12Hour(String timeStr) {
+        if (timeStr == null || timeStr.trim().isEmpty()) {
+            return timeStr;
+        }
+
+        try {
+            java.time.format.DateTimeFormatter inputFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+
+            java.time.format.DateTimeFormatter outputFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("hh:mm a", java.util.Locale.ENGLISH);
+
+            java.time.LocalTime time =
+                    java.time.LocalTime.parse(timeStr.trim(), inputFormatter);
+
+            return time.format(outputFormatter);
+
+        } catch (Exception e) {
+            LogUtil.warn(getClass().getName(), "Invalid 24-hour time format: " + timeStr);
+            return timeStr;
+        }
     }
 
 }

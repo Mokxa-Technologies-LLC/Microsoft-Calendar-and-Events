@@ -88,7 +88,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
 
     @Override
     public String getRenderPage() {
-        LogUtil.info(getClassName(), "getRenderPage() called");
+//        LogUtil.info(getClassName(), "getRenderPage() called");
 
         PluginManager pluginManager = (PluginManager) AppUtil.getApplicationContext().getBean("pluginManager");
 
@@ -103,7 +103,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
         boolean isPreview = "true".equals(getRequestParameterString("isPreview"));
         dataModel.put("isPreview", isPreview);
 
-        LogUtil.info(getClassName(), "Rendering template with isPreview: " + isPreview);
+//        LogUtil.info(getClassName(), "Rendering template with isPreview: " + isPreview);
 
         return pluginManager.getPluginFreeMarkerTemplate(dataModel, getClassName(), "/templates/GraphApiConnectMenu.ftl", null);
     }
@@ -131,11 +131,11 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
     public void webService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             if (PLUGINDEBUGMODE) {
-                LogUtil.info(TAG, "=== WEBSERVICE OAUTH CALLBACK STARTED ===");
-                LogUtil.info(TAG, "INCOMING METHOD: " + request.getMethod());
-                LogUtil.info(TAG, "INCOMING URI: " + request.getRequestURI());
-                LogUtil.info(TAG, "INCOMING QUERY: " + request.getQueryString());
-                LogUtil.info(TAG, "INCOMING SESSION: " + request.getSession().getId());
+//                LogUtil.info(TAG, "=== WEBSERVICE OAUTH CALLBACK STARTED ===");
+//                LogUtil.info(TAG, "INCOMING METHOD: " + request.getMethod());
+//                LogUtil.info(TAG, "INCOMING URI: " + request.getRequestURI());
+//                LogUtil.info(TAG, "INCOMING QUERY: " + request.getQueryString());
+//                LogUtil.info(TAG, "INCOMING SESSION: " + request.getSession().getId());
             }
 
             String code = request.getParameter("code");
@@ -146,11 +146,11 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
             String successRedirectUrl ="";
 
 
-            LogUtil.info(TAG, "OAuth callback params - code: " + (code != null ? "[present]" : "[null]") +
-                    ", state: " + state + ", error: " + error);
+//            LogUtil.info(TAG, "OAuth callback params - code: " + (code != null ? "[present]" : "[null]") +
+//                    ", state: " + state + ", error: " + error);
 
             String currentUser = WorkflowUtil.getCurrentUsername();
-            LogUtil.info(TAG, "Current Joget user: " + currentUser);
+//            LogUtil.info(TAG, "Current Joget user: " + currentUser);
 
             // OAuth error
             if (error != null) {
@@ -171,7 +171,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
 
             // Exchange code for token
             if (StringUtils.isNotBlank(code)) {
-                LogUtil.info(TAG, "Authorization code received, starting token exchange...");
+//                LogUtil.info(TAG, "Authorization code received, starting token exchange...");
 
                 // Decode state parameter to get configuration
                 String clientId = "";
@@ -197,19 +197,19 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                                 ""
                         );
 
-                        LogUtil.info(TAG, "Successfully decoded state parameter");
+//                        LogUtil.info(TAG, "Successfully decoded state parameter");
                     } catch (Exception e) {
                         LogUtil.error(TAG, e, "Failed to decode state parameter");
                     }
                 }
 
-                LogUtil.info(TAG, "Config - clientId: " + (StringUtils.isNotBlank(clientId) ? "[configured]" : "[MISSING]") +
-                        ", clientSecret: " + (StringUtils.isNotBlank(clientSecret) ? "[configured]" : "[MISSING]") +
-                        ", tenant: " + tenant + ", redirectUri: " + redirectUri);
+//                LogUtil.info(TAG, "Config - clientId: " + (StringUtils.isNotBlank(clientId) ? "[configured]" : "[MISSING]") +
+//                        ", clientSecret: " + (StringUtils.isNotBlank(clientSecret) ? "[configured]" : "[MISSING]") +
+//                        ", tenant: " + tenant + ", redirectUri: " + redirectUri);
 
                 // Exchange code for token
                 String tokenEndpoint = "https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/token";
-                LogUtil.info(TAG, "Calling token endpoint: " + tokenEndpoint);
+//                LogUtil.info(TAG, "Calling token endpoint: " + tokenEndpoint);
 
                 Content tokenResponse = Request.Post(tokenEndpoint)
                         .bodyForm(
@@ -224,7 +224,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                         ).execute().returnContent();
 
                 String json = tokenResponse.asString();
-                LogUtil.info(TAG, "Token response received, parsing JSON...");
+//                LogUtil.info(TAG, "Token response received, parsing JSON...");
 
                 ObjectMapper om = new ObjectMapper();
                 Map<String, Object> tokenResp = om.readValue(json, Map.class);
@@ -236,22 +236,22 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                 String scope = (String) tokenResp.get("scope");
                 Integer expiresIn = (Integer) tokenResp.get("expires_in");
 
-                LogUtil.info("System time:", String.valueOf(System.currentTimeMillis()));
+//                LogUtil.info("System time:", String.valueOf(System.currentTimeMillis()));
                 // Calculate expiry timestamp
                 long expiresAtMillis = System.currentTimeMillis() + (expiresIn != null ? expiresIn * 1000L : 3600000L);
                 java.sql.Timestamp expiresAt = new java.sql.Timestamp(expiresAtMillis);
-                LogUtil.info("Expires At:", String.valueOf(expiresAt));
+//                LogUtil.info("Expires At:", String.valueOf(expiresAt));
 
-                LogUtil.info(TAG, "Token extracted - accessToken: " + (accessToken != null ? "[present]" : "[MISSING]") +
-                        ", refreshToken: " + (refreshToken != null ? "[present]" : "[MISSING]") +
-                        ", idToken: " + (idToken != null ? "[present]" : "[null]") +
-                        ", scope: " + scope + ", expiresIn: " + expiresIn + "s, expiresAt: " + expiresAt);
+//                LogUtil.info(TAG, "Token extracted - accessToken: " + (accessToken != null ? "[present]" : "[MISSING]") +
+//                        ", refreshToken: " + (refreshToken != null ? "[present]" : "[MISSING]") +
+//                        ", idToken: " + (idToken != null ? "[present]" : "[null]") +
+//                        ", scope: " + scope + ", expiresIn: " + expiresIn + "s, expiresAt: " + expiresAt);
 
                 // Parse id_token for oid/upn
                 String msOid = null;
                 String msUpn = null;
                 if (idToken != null) {
-                    LogUtil.info(TAG, "Parsing ID token for user identity...");
+//                    LogUtil.info(TAG, "Parsing ID token for user identity...");
                     String[] parts = idToken.split("\\.");
                     if (parts.length >= 2) {
                         String payload = new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8);
@@ -261,29 +261,29 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                         if (msUpn == null) {
                             msUpn = (String) claims.get("preferred_username");
                         }
-                        LogUtil.info(TAG, "Parsed ID token - oid: " + msOid + ", upn: " + msUpn);
+//                        LogUtil.info(TAG, "Parsed ID token - oid: " + msOid + ", upn: " + msUpn);
                     }
                 }
 
                 String id = UUID.randomUUID().toString();
-                LogUtil.info(TAG, "Generated record ID: " + id);
+//                LogUtil.info(TAG, "Generated record ID: " + id);
 
                 // Store token to DB
                 byte[] tokenCacheEnc = accessToken != null ? accessToken.getBytes(StandardCharsets.UTF_8) : new byte[0];
 
-                LogUtil.info(TAG, "Storing token to database...");
+//                LogUtil.info(TAG, "Storing token to database...");
                 //storeTokenToDb(id, currentUser, tenant, msOid == null ? "" : msOid, msUpn, scope, tokenCacheEnc, expiresAt,refreshToken);
                 storeTokenToDb(id, currentUser, tenant, msOid == null ? "" : msOid, msUpn, scope, tokenCacheEnc, expiresAt, refreshToken, json);
-                LogUtil.info(TAG, "Token stored successfully to database");
+//                LogUtil.info(TAG, "Token stored successfully to database");
 
                 // Redirect after successful authentication
                 //String redirectUrl = "https://lmsuat.mymokxa.com/jw/web/userview/lms/v/_/2DA46020ED4A47D162E5C719CEB6BDC7";
 
 
-                LogUtil.info(TAG, "Redirecting to: " + successRedirectUrl);
+//                LogUtil.info(TAG, "Redirecting to: " + successRedirectUrl);
                 response.sendRedirect(successRedirectUrl);
 
-                LogUtil.info(TAG, "=== OAUTH CALLBACK COMPLETED SUCCESSFULLY ===");
+//                LogUtil.info(TAG, "=== OAUTH CALLBACK COMPLETED SUCCESSFULLY ===");
             } else {
                 LogUtil.error(TAG, null, "No authorization code received in callback");
                 response.setContentType("text/html");
@@ -310,25 +310,26 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
 
     // Check connection status and generate auth URL if needed
     public Object getData() {
-        LogUtil.info(TAG, "=== getData() called - checking connection status ===");
+
+//        LogUtil.info(TAG, "=== getData() called - checking connection status ===");
 
         Map<String, Object> data = new HashMap<>();
         String currentUser = WorkflowUtil.getCurrentUsername();
         data.put("username", currentUser);
         data.put("connected", false);
 
-        LogUtil.info(TAG, "Current Joget user: " + currentUser);
+//        LogUtil.info(TAG, "Current Joget user: " + currentUser);
 
         try {
             // Check if user already has valid
             String accessToken = getStoredAccessToken(currentUser);
 
             if (accessToken != null) {
-                LogUtil.info(TAG, "User has existing access token stored");
+//                LogUtil.info(TAG, "User has existing access token stored");
                 data.put("connected", true);
                 data.put("access_token", accessToken);
             } else {
-                LogUtil.info(TAG, "No stored token found, generating Microsoft sign-in URL...");
+//                LogUtil.info(TAG, "No stored token found, generating Microsoft sign-in URL...");
 
                 // Generate auth URL
                 String clientId = getPropertyString("clientId");
@@ -340,8 +341,8 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                 String scopes = getPropertyString("scopes");
                 String redirectUri = getPropertyString("redirectUri");
 
-                LogUtil.info(TAG, "Auth config - clientId: " + (StringUtils.isNotBlank(clientId) ? "[configured]" : "[MISSING]") +
-                        ", tenant: " + tenant + ", scopes: " + scopes + ", redirectUri: " + redirectUri);
+//                LogUtil.info(TAG, "Auth config - clientId: " + (StringUtils.isNotBlank(clientId) ? "[configured]" : "[MISSING]") +
+//                        ", tenant: " + tenant + ", scopes: " + scopes + ", redirectUri: " + redirectUri);
 
                 if (StringUtils.isBlank(redirectUri)) {
                     LogUtil.error(TAG, null, "Redirect URI is not configured");
@@ -373,7 +374,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
                         "&scope=" + urlEncode(scopes) +
                         "&state=" + state;
 
-                LogUtil.info(TAG, "Generated auth URL (length: " + authUrl.length() + ")");
+//                LogUtil.info(TAG, "Generated auth URL (length: " + authUrl.length() + ")");
                 data.put("authUrl", authUrl);
             }
         } catch (Exception e) {
@@ -381,7 +382,7 @@ public class GraphApiConnectMenu extends UserviewMenu implements PluginWebSuppor
             data.put("error", "Error checking connection: " + e.getMessage());
         }
 
-        LogUtil.info(TAG, "=== getData() completed - connected: " + data.get("connected") + " ===");
+//        LogUtil.info(TAG, "=== getData() completed - connected: " + data.get("connected") + " ===");
         return data;
     }
 

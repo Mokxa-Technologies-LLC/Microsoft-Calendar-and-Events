@@ -16,10 +16,10 @@ org/joget/mokxa/MsGraphTokenRefreshTool.class
 org/joget/mokxa/GraphAppContext.class
 org/joget/mokxa/CreateOrUpdateEvent.class
 org/joget/mokxa/dao/GraphAuthDao.class
-org/joget/mokxa/CreateOrUpdateEvent$RecurrenceDiff.class
 org/joget/mokxa/GraphApiConnectMenu.class
 org/joget/mokxa/SyncTenantCalendarEventsTool.class
 org/joget/mokxa/CancelEvent.class
+org/joget/mokxa/CreateOrUpdateEvent$GraphRecurrenceDiff.class
 org/joget/mokxa/dao/GraphAuthDaoImpl$4.class
 org/joget/mokxa/model/ApiResponse.class
 org/joget/mokxa/CalendarList.class

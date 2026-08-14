@@ -52,7 +52,8 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
     public Object execute(Map props) {
 
 
-        LogUtil.info(getClass().getName(), "==== Tenant Calendar Sync START ====");
+//        LogUtil.info(getClass().getName(), "==== Tenant Calendar Sync START ====");
+//        LogUtil.info(getClass().getName(), "Props: "+props.toString());
 
         try {
             String tenantId     = getPropertyString("tenantId");
@@ -79,7 +80,7 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
             String startUtcSync = formatUtc(startRange);
             String endUtcSync   = formatUtc(endRange);
 
-            LogUtil.info(getClass().getName(), "Sync Window UTC → " + startUtcSync + " to " + endUtcSync);
+//            LogUtil.info(getClass().getName(), "Sync Window UTC → " + startUtcSync + " to " + endUtcSync);
 
             TenantCalendarSyncUtil util = new TenantCalendarSyncUtil(tenantId, clientId, clientSecret);
 
@@ -96,6 +97,7 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
 
                 String userId = user.getString("id");
                 String userEmail = user.optString("mail", user.optString("userPrincipalName"));
+//                LogUtil.info(getClass().getName(), "Sync User " + userEmail);
 
                 JSONArray events = util.getUserEvents(userId, startUtcSync, endUtcSync,buildExtendedPropId());
 
@@ -183,7 +185,7 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
 
 
 
-                    if (event.has("onlineMeeting")) {
+                    if (event.optBoolean("isOnlineMeeting", false)) {
                         JSONObject meeting = event.optJSONObject("onlineMeeting");
                         set(row, "enableMeetingField", "true");
                         if (meeting != null) {
@@ -222,12 +224,19 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
                         );
                     }
 
-                    JSONArray singleValueProps = event.optJSONArray("singleValueExtendedProperties");
+                    JSONArray singleValueProps = event.optJSONArray("singleValueExtendedProperties",new  JSONArray());
+//                    LogUtil.info(getClass().getName(), "Sync Single Value ExtendedProperties: "+singleValueProps.toString());
                     if (singleValueProps != null && !singleValueProps.isEmpty()) {
                         set(
                                 row,
                                 "extendedPropFormField",
                                 singleValueProps.optJSONObject(0).optString("value", "")
+                        );
+                    }else{
+                        set(
+                                row,
+                                "extendedPropFormField",
+                                ""
                         );
                     }
 
@@ -240,7 +249,7 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
 
             updateLastSync(nowUtc);
 
-            LogUtil.info(getClass().getName(), "==== Tenant Calendar Sync END ====");
+//            LogUtil.info(getClass().getName(), "==== Tenant Calendar Sync END ====");
 
         } catch (Exception e) {
             LogUtil.error(getClass().getName(), e, "Unexpected error during tenant calendar sync");
@@ -284,7 +293,7 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
 
             Instant fallback = Instant.now().minusSeconds(fallbackHours * 3600L);
 
-            LogUtil.info(getClass().getName(), "Last sync not found, using fallback → " + fallback);
+//            LogUtil.info(getClass().getName(), "Last sync not found, using fallback → " + fallback);
 
             return fallback;
         }
@@ -315,14 +324,14 @@ public class SyncTenantCalendarEventsTool extends DefaultApplicationPlugin {
 
             variableDao.add(variable);
 
-            LogUtil.info(getClass().getName(), "Created ENV variable " + ENV_LAST_SYNC + " → " + utc);
+//            LogUtil.info(getClass().getName(), "Created ENV variable " + ENV_LAST_SYNC + " → " + utc);
 
         } else {
 
             variable.setValue(utc.toString());
             variableDao.update(variable);
 
-            LogUtil.info(getClass().getName(), "Updated ENV variable " + ENV_LAST_SYNC + " → " + utc);
+//            LogUtil.info(getClass().getName(), "Updated ENV variable " + ENV_LAST_SYNC + " → " + utc);
         }
     }
 

@@ -32,7 +32,7 @@ public class TenantCalendarSyncUtil {
 
     public boolean authenticate() {
 
-        LogUtil.info(getClass().getName(), "Authenticating (APP permission) for tenant=" + tenantId);
+//        LogUtil.info(getClass().getName(), "Authenticating (APP permission) for tenant=" + tenantId);
 
         String tokenUrl = "https://login.microsoftonline.com/" + tenantId + "/oauth2/v2.0/token";
 
@@ -57,7 +57,7 @@ public class TenantCalendarSyncUtil {
 
                 if (code == 200) {
                     accessToken = new JSONObject(body).getString("access_token");
-                    LogUtil.info(getClass().getName(), "Access token acquired successfully");
+//                    LogUtil.info(getClass().getName(), "Access token acquired successfully");
                     return true;
                 }
 
@@ -74,7 +74,7 @@ public class TenantCalendarSyncUtil {
         request.setHeader("Authorization", "Bearer " + accessToken);
         request.setHeader("Accept", "application/json");
 
-        LogUtil.info(getClass().getName(), request.getMethod() + " " + request.getURI());
+//        LogUtil.info(getClass().getName(), request.getMethod() + " " + request.getURI());
 
         try (CloseableHttpClient client = HttpClientBuilder.create().build();
              CloseableHttpResponse response = client.execute(request)) {
@@ -83,9 +83,10 @@ public class TenantCalendarSyncUtil {
                             ? EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8)
                             : "{}";
 
-            LogUtil.info(getClass().getName(), "Response Code → " + response.getStatusLine().getStatusCode());
 
-            LogUtil.debug(getClass().getName(), "Response Body → " + body);
+//            LogUtil.info(getClass().getName(), "Response Code → " + response.getStatusLine().getStatusCode());
+
+//            LogUtil.debug(getClass().getName(), "Response Body → " + body);
 
             return new JSONObject(body);
         }
@@ -93,7 +94,7 @@ public class TenantCalendarSyncUtil {
 
     public List<JSONObject> getAllUsers() {
 
-        LogUtil.info(getClass().getName(), "Fetching all users from tenant");
+//        LogUtil.info(getClass().getName(), "Fetching all users from tenant");
 
         List<JSONObject> users = new ArrayList<>();
         String url = GRAPH_BASE + "/users?$select=id,mail,userPrincipalName";
@@ -113,7 +114,7 @@ public class TenantCalendarSyncUtil {
                 url = response.optString("@odata.nextLink", null);
             }
 
-            LogUtil.info(getClass().getName(), "Total users fetched → " + users.size());
+//            LogUtil.info(getClass().getName(), "Total users fetched → " + users.size());
 
         } catch (Exception e) {
             LogUtil.error(getClass().getName(), e, "Error fetching users");
@@ -125,7 +126,7 @@ public class TenantCalendarSyncUtil {
 
     public JSONArray getUserEvents( String userId, String startUtc, String endUtc ,String extendedPropId) {
 
-        LogUtil.info(getClass().getName(), "Fetching events for user=" + userId + " range=" + startUtc + " → " + endUtc);
+//        LogUtil.info(getClass().getName(), "Fetching events for user=" + userId + " range=" + startUtc + " → " + endUtc);
 
         String expand = "";
 
@@ -138,14 +139,15 @@ public class TenantCalendarSyncUtil {
                     GRAPH_BASE + "/users/" + userId + "/calendarView" +
                             "?startDateTime=" + encode(startUtc) +
                             "&endDateTime=" + encode(endUtc) +
-                            "&$select=id,subject,start,end,isAllDay,isCancelled" +
+                            "&$select=id,subject,start,end,isAllDay,isCancelled,isOnlineMeeting,location,organizer,type,seriesMasterId,attendees,webLink,body" +
                             (extendedPropId.isEmpty()?"":"&$expand=" + encode(expand));
 
             JSONObject response = execute(new HttpGet(url));
             JSONArray events = response.optJSONArray("value");
 
-            LogUtil.info(getClass().getName(), "Events fetched for user=" + userId + " → " + (events != null ? events.length() : 0));
+//            LogUtil.info(getClass().getName(), "Events fetched for user=" + userId + " → " + (events != null ? events.length() : 0));
 
+//            LogUtil.info(getClass().getName(),url);
             return events != null ? events : new JSONArray();
 
         } catch (Exception e) {

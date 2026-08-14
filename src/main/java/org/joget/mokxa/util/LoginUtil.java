@@ -39,7 +39,7 @@ public class LoginUtil {
             );
         }
 
-        LogUtil.info(LoginUtil.class.getName(),tokenJson);
+//        LogUtil.info(LoginUtil.class.getName(),tokenJson);
 
         JSONObject json = new JSONObject(tokenJson);
 

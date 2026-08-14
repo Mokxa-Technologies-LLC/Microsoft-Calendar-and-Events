@@ -52,9 +52,12 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
         String extendedPropName       = getPropertyString("extendedPropName");
         String extendedPropFormField  = getPropertyString("extendedPropFormField");
 
+        String is24Format = getPropertyString("is24Format");
+        boolean use24Format = "true".equalsIgnoreCase(is24Format);
+
         String apiUsernameField = getPropertyString("apiUsernameField");
 
-        LogUtil.info(getClassName(),"apiUsernameField: "+apiUsernameField);
+//        LogUtil.info(getClassName(),"apiUsernameField: "+apiUsernameField);
 
 
 
@@ -65,17 +68,17 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
             try {
                 if (apiUsernameField != null && !apiUsernameField.isEmpty()) {
                     CURRENT_USERNAME = row.getProperty(apiUsernameField);
-                    LogUtil.info(getClassName(),"Current Username via form: "+CURRENT_USERNAME);
+//                    LogUtil.info(getClassName(),"Current Username via form: "+CURRENT_USERNAME);
                 }
 
                 if (CURRENT_USERNAME == null || CURRENT_USERNAME.isEmpty()) {
                     CURRENT_USERNAME = WorkflowUtil.getCurrentUsername();
-                    LogUtil.info(getClassName(),"Current Username via Current user: "+CURRENT_USERNAME);
+                    //LogUtil.info(getClassName(),"Current Username via Current user: "+CURRENT_USERNAME);
                 }
 
 
                 EventUtil eventUtil = new EventUtil(LoginUtil.getAccessToken(CURRENT_USERNAME),buildExtendedPropId(),CURRENT_USERNAME);
-                LogUtil.info("Rows",rows.toString());
+//                LogUtil.info("Rows",rows.toString());
                 showFormData(formData);
                 String subject = row.getProperty(subjectField);
                 String location = row.getProperty(locationField);
@@ -108,8 +111,16 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
                     row.setProperty(toDateField,to);
                 } else {
                     // Convert user local time to UTC
-                    from = CustomTimeZoneUtil.convertUserZoneToUtc(row.getProperty(fromDateTimeField), CURRENT_USERNAME);
-                    to   = CustomTimeZoneUtil.convertUserZoneToUtc(row.getProperty(toDateTimeField), CURRENT_USERNAME);
+                    String fromDateTimeValue = row.getProperty(fromDateTimeField);
+                    String toDateTimeValue   = row.getProperty(toDateTimeField);
+
+                    if (!use24Format) {
+                        fromDateTimeValue = convert12HourTo24Hour(fromDateTimeValue);
+                        toDateTimeValue   = convert12HourTo24Hour(toDateTimeValue);
+                    }
+                    from = CustomTimeZoneUtil.convertUserZoneToUtc(fromDateTimeValue, CURRENT_USERNAME);
+                    to   = CustomTimeZoneUtil.convertUserZoneToUtc(toDateTimeValue, CURRENT_USERNAME);
+
                     row.setProperty(fromDateTimeField,from);
                     row.setProperty(toDateTimeField,to);
                 }
@@ -218,7 +229,7 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
             }
         }
 
-        LogUtil.info(getClass().getName(), "FormData params: " + json.toString());
+//        LogUtil.info(getClass().getName(), "FormData params: " + json.toString());
     }
 
     public JSONArray buildAttendees(FormRow row) {
@@ -292,7 +303,11 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
         // This part is actually correct - it extracts just the date:
         String startDate;
         if ("true".equalsIgnoreCase(row.getProperty(allDayField))) {
-            startDate = row.getProperty(fromDateField);
+            String dt = row.getProperty(fromDateField);
+            if (dt == null || dt.length() < 10) {
+                throw new IllegalArgumentException("Invalid from_date");
+            }
+            startDate = dt.substring(0, 10);  // This is correct - just the date
         } else {
             String dt = row.getProperty(fromDateTimeField);
             if (dt == null || dt.length() < 10) {
@@ -434,7 +449,7 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
                 isAttendeesDifferent(attendees, old.optJSONArray("attendees"))
                         ? attendees: null;
 
-        RecurrenceDiff rdiff =
+        GraphRecurrenceDiff rdiff =
                 compareRecurrence(
                         isRecurring,
                         recurrence,
@@ -579,8 +594,8 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
         return dateTime.substring(0, 10); // yyyy-MM-dd
     }
 
-    private RecurrenceDiff compareRecurrence(   boolean formRecurring, JSONObject formRecurrence, JSONObject graphRecurrence) {
-        RecurrenceDiff diff = new RecurrenceDiff();
+    private GraphRecurrenceDiff compareRecurrence(boolean formRecurring, JSONObject formRecurrence, JSONObject graphRecurrence) {
+        GraphRecurrenceDiff diff = new GraphRecurrenceDiff();
         if (formRecurring) {
             // non-recurring → recurring
             if (graphRecurrence == null) {
@@ -655,7 +670,29 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
         return s.trim();
     }
 
-    static class RecurrenceDiff {
+    private String convert12HourTo24Hour(String dateTimeStr) {
+        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
+            return dateTimeStr;
+        }
+
+        try {
+            DateTimeFormatter inputFormatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH);
+
+            DateTimeFormatter outputFormatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            LocalDateTime dateTime =
+                    LocalDateTime.parse(dateTimeStr.trim().toUpperCase(), inputFormatter);
+
+            return dateTime.format(outputFormatter);
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid 12-hour datetime format: " + dateTimeStr, e);
+        }
+    }
+
+    private class GraphRecurrenceDiff {
         Boolean isRecurring = null;
         JSONObject recurrence = null;
     }

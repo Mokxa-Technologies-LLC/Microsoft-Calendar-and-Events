@@ -44,7 +44,7 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
     @Override
     public Object execute(Map props) {
 
-        LogUtil.info(getClass().getName(), "==== REMINDER TOOL START ====");
+//        LogUtil.info(getClass().getName(), "==== REMINDER TOOL START ====");
 
         try {
 
@@ -73,9 +73,9 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
             } catch (Exception ignore) {}
 
 
-            LogUtil.info(getClass().getName(),
-                    "ReminderMinutes=" + reminderMinutes +
-                            ", WindowMinutes=" + windowMinutes);
+//            LogUtil.info(getClass().getName(),
+//                    "ReminderMinutes=" + reminderMinutes +
+//                            ", WindowMinutes=" + windowMinutes);
 
             // ALWAYS UTC
             Instant nowUtc = Instant.now();
@@ -88,11 +88,11 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
             String start = windowStart.toString();
             String end   = windowEnd.toString();
 
-            LogUtil.info(getClass().getName(),
-                    "NowUTC=" + nowUtc +
-                            ", Target=" + targetUtc +
-                            ", WindowStart=" + start +
-                            ", WindowEnd=" + end);
+//            LogUtil.info(getClass().getName(),
+//                    "NowUTC=" + nowUtc +
+//                            ", Target=" + targetUtc +
+//                            ", WindowStart=" + start +
+//                            ", WindowEnd=" + end);
 
             FormDataDao dao =
                     (FormDataDao) AppUtil.getApplicationContext()
@@ -108,16 +108,16 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
                             "AND c_" + fromDateTimeField + " BETWEEN ? AND ? ";
 
 
-            LogUtil.info(getClass().getName(),
-                    "Query WHERE = " + where);
+//            LogUtil.info(getClass().getName(),
+//                    "Query WHERE = " + where);
 
             List<Object> params = new ArrayList<>();
             params.add(start);
             params.add(end);
 
 
-            LogUtil.info(getClass().getName(),
-                    "Query params = " + start + " , " + end);
+//            LogUtil.info(getClass().getName(),
+//                    "Query params = " + start + " , " + end);
 
             FormRowSet rows = dao.find(
                     formId,
@@ -127,8 +127,8 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
                     null, null, null, null
             );
 
-            LogUtil.info(getClass().getName(),
-                    "Rows found = " + rows.size());
+//            LogUtil.info(getClass().getName(),
+//                    "Rows found = " + rows.size());
 
             for (FormRow row : rows) {
 
@@ -204,7 +204,7 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
             );
         }
 
-        LogUtil.info(getClass().getName(), "==== REMINDER TOOL END ====");
+//        LogUtil.info(getClass().getName(), "==== REMINDER TOOL END ====");
 
         return null;
     }
@@ -247,9 +247,9 @@ public class SendCalendarEventReminderTool extends DefaultApplicationPlugin {
                 int result = PushServiceUtil.sendUserPushNotification(   username, subject, message, eventUrl, "", "", true);
 
                 if (result == 1) {
-                    LogUtil.info( getClass().getName(), "Push sent to " + username + " (" + email + ")");
+//                    LogUtil.info( getClass().getName(), "Push sent to " + username + " (" + email + ")");
                 } else {
-                    LogUtil.warn(getClass().getName(), "Push failed for " + username + " (" + email + ")");
+//                    LogUtil.warn(getClass().getName(), "Push failed for " + username + " (" + email + ")");
                 }
             }
 

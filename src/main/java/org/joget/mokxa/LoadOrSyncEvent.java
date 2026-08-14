@@ -51,14 +51,13 @@ public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , Form
     @Override
     public FormRowSet load(Element element, String primaryKey, FormData formData) {
 
-
-
-
-
         FormRowSet rows = new FormRowSet();
         rows.setMultiRow(false);
 
         CURRENT_USERNAME= WorkflowUtil.getCurrentUsername();
+
+        String is24Format = getPropertyString("is24Format");
+        boolean use24Format = "true".equalsIgnoreCase(is24Format);
 
         try {
             if (primaryKey == null || primaryKey.isEmpty()) {
@@ -127,14 +126,19 @@ public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , Form
                         end.getString("dateTime"),
                         CURRENT_USERNAME
                 );
+
+                if (!use24Format) {
+                    startLocal = convert24HourTo12Hour(startLocal);
+                    endLocal   = convert24HourTo12Hour(endLocal);
+                }
             }
 
-            LogUtil.info("Start Local [Sync]:",startLocal);
-            LogUtil.info("Start Graph [Sync]:",start.getString("dateTime"));
-
-
-            LogUtil.info("End Local:",endLocal);
-            LogUtil.info("End Graph:",end.getString("dateTime"));
+//            LogUtil.info("Start Local [Sync]:",startLocal);
+//            LogUtil.info("Start Graph [Sync]:",start.getString("dateTime"));
+//
+//
+//            LogUtil.info("End Local:",endLocal);
+//            LogUtil.info("End Graph:",end.getString("dateTime"));
 
 
             if (isAllDay) {
@@ -143,20 +147,21 @@ public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , Form
             } else {
                 set(row, "fromDateTimeField", startLocal);
                 set(row, "toDateTimeField", endLocal);
+
             }
 
 
-            boolean hasMeeting = event.has("onlineMeeting");
+            boolean hasMeeting = event.optBoolean("isOnlineMeeting", false);
 
+            set(row, "enableMeetingField", String.valueOf(hasMeeting));
 
-            if (event.has("onlineMeeting")) {
+            if (hasMeeting && event.has("onlineMeeting") && !event.isNull("onlineMeeting")) {
                 JSONObject meeting = event.optJSONObject("onlineMeeting");
-                set(row, "enableMeetingField", String.valueOf(hasMeeting));
-
                 if (meeting != null) {
                     set(row, "meetingLinkField", meeting.optString("joinUrl"));
                 }
             }
+
 
 
             if (event.has("attendees")&& event.optJSONArray("attendees")!=null) {
@@ -304,6 +309,27 @@ public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , Form
         String field = getPropertyString(propertyKey);
         if (field != null && !field.isEmpty() && value != null) {
             row.setProperty(field, value);
+        }
+    }
+
+    private String convert24HourTo12Hour(String dateTimeStr) {
+        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
+            return dateTimeStr;
+        }
+        try {
+            java.time.format.DateTimeFormatter inputFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            java.time.format.DateTimeFormatter outputFormatter =
+                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", java.util.Locale.ENGLISH);
+
+            java.time.LocalDateTime dateTime =
+                    java.time.LocalDateTime.parse(dateTimeStr.trim(), inputFormatter);
+
+            return dateTime.format(outputFormatter);
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid 24-hour datetime format: " + dateTimeStr, e);
         }
     }
 

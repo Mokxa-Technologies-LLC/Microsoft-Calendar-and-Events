@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MsGraphTokenRefreshTool extends DefaultApplicationPlugin implements PropertyEditable {
     private static final String TAG = "MsGraphTokenRefreshTool";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -379,7 +379,7 @@ public class MsGraphTokenRefreshTool extends DefaultApplicationPlugin implements
             if (payloadNode.has("appid")) {
                 String clientId = payloadNode.get("appid").asText();
                 if (DEBUG) {
-                    LogUtil.info(TAG, "Extracted client_id from JWT: " + clientId);
+//                    LogUtil.info(TAG, "Extracted client_id from JWT: " + clientId);
                 }
                 return clientId;
             } else {

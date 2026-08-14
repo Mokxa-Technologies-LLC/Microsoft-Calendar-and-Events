@@ -56,13 +56,13 @@ public class EventUtil {
                                 : ""
                 );
 
-                LogUtil.info(getClass().getName(),
-                        request.getMethod() + " " + request.getURI()
-                                + " → " + apiResponse.getResponseCode());
-
-                LogUtil.info(getClass().getName(),
-                        "Response "
-                                + " → " + apiResponse.getResponseBody());
+//                LogUtil.info(getClass().getName(),
+//                        request.getMethod() + " " + request.getURI()
+//                                + " → " + apiResponse.getResponseCode());
+//
+//                LogUtil.info(getClass().getName(),
+//                        "Response "
+//                                + " → " + apiResponse.getResponseBody());
 
                 return apiResponse;
             }
@@ -121,7 +121,7 @@ public class EventUtil {
                 );
             }
 
-            LogUtil.info(getClass().getName(),"Request Body"+ body);
+//            LogUtil.info(getClass().getName(),"Request Body"+ body);
 
             HttpEntityEnclosingRequestBase request;
             request = new HttpPost("https://graph.microsoft.com/v1.0/me/events");
@@ -201,15 +201,15 @@ public class EventUtil {
             }
 
             if (body.isEmpty()) {
-                LogUtil.info(getClass().getName(),
-                        "No changes detected, PATCH skipped for eventId=" + eventId);
+//                LogUtil.info(getClass().getName(),
+//                        "No changes detected, PATCH skipped for eventId=" + eventId);
                 ApiResponse response = new ApiResponse();
                 response.setResponseCode(200);
                 response.setResponseBody(new JSONObject().put("id",eventId).toString());
                 return response;
             }
 
-            LogUtil.info(getClass().getName(), "PATCH Body → " + body);
+//            LogUtil.info(getClass().getName(), "PATCH Body → " + body);
 
             HttpPatch request = new HttpPatch(
                     "https://graph.microsoft.com/v1.0/me/events/" + eventId
@@ -247,7 +247,7 @@ public class EventUtil {
                 body.put("comment", comment);
             }
 
-            LogUtil.info(getClass().getName(), "Cancel Event Body → " + body);
+//            LogUtil.info(getClass().getName(), "Cancel Event Body → " + body);
             HttpPost request = new HttpPost("https://graph.microsoft.com/v1.0/me/events/" + eventId + "/cancel");
 
             request.setEntity( new StringEntity(body.toString(), ContentType.APPLICATION_JSON));

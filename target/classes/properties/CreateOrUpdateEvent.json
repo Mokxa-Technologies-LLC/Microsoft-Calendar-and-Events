@@ -90,6 +90,19 @@
         "value": "to_date_time",
         "required": "true"
       },
+      {
+        "name": "is24Format",
+        "label": "Use 24 Hour Time Format",
+        "type": "checkbox",
+        "value": "true",
+        "options": [
+          {
+            "value": "true",
+            "label": "Yes"
+          }
+        ],
+        "description": "Enable this if From Date Time and To Date Time values are in 24-hour format, for example 2026-07-07 18:30. Disable if values are in 12-hour format, for example 2026-07-07 06:30 PM."
+      },
 
       {
         "label": "Flags & Toggles",

@@ -32,7 +32,7 @@ public class CancelEvent extends FormBinder implements FormStoreBinder , FormSto
 
                 if (apiUsernameField != null && !apiUsernameField.isEmpty()) {
                     CURRENT_USERNAME = row.getProperty(apiUsernameField);
-                    LogUtil.info(getClassName(),"Current Username via form: "+CURRENT_USERNAME);
+//                    LogUtil.info(getClassName(),"Current Username via form: "+CURRENT_USERNAME);
                 }
 
                 if (CURRENT_USERNAME == null || CURRENT_USERNAME.isEmpty()) {
@@ -42,7 +42,7 @@ public class CancelEvent extends FormBinder implements FormStoreBinder , FormSto
 
                 EventUtil eventUtil = new EventUtil(LoginUtil.getAccessToken(CURRENT_USERNAME),null,CURRENT_USERNAME);
 
-                LogUtil.info("Rows",rows.toString());
+//                LogUtil.info("Rows",rows.toString());
                 showFormData(formData);
                 String comment = row.getProperty(commentField);
                 String eventId = row.getId();
@@ -84,7 +84,7 @@ public class CancelEvent extends FormBinder implements FormStoreBinder , FormSto
             }
         }
 
-        LogUtil.info(getClass().getName(), "FormData params: " + json.toString());
+//        LogUtil.info(getClass().getName(), "FormData params: " + json.toString());
     }
 
 

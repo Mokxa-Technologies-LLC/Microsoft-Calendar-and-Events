@@ -22,16 +22,16 @@ public class CustomTimeZoneUtil {
                 null
         );
 
-        LogUtil.info(CustomTimeZoneUtil.class.getName(), "Raw user timezone from Joget = [" + timeZone + "]");
+//        LogUtil.info(CustomTimeZoneUtil.class.getName(), "Raw user timezone from Joget = [" + timeZone + "]");
         if (timeZone == null || timeZone.trim().isEmpty()) {
             LogUtil.warn(CustomTimeZoneUtil.class.getName(), "User timezone is empty → defaulting to UTC");
             return "UTC";
         }
         timeZone = timeZone.trim();
         if (isNumeric(timeZone)) {
-            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Numeric timezone detected = " + timeZone);
+//            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Numeric timezone detected = " + timeZone);
             String resolved = TimeZoneUtil.getTimeZoneByGMT(timeZone);
-            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Resolved GMT offset [" + timeZone + "] → [" + resolved + "]");
+//            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Resolved GMT offset [" + timeZone + "] → [" + resolved + "]");
             if (resolved != null) {
                 return resolved;
             }
@@ -41,7 +41,7 @@ public class CustomTimeZoneUtil {
 
         try {
             ZoneId.of(timeZone);
-            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Valid IANA timezone detected = " + timeZone);
+//            LogUtil.info(CustomTimeZoneUtil.class.getName(), "Valid IANA timezone detected = " + timeZone);
             return timeZone;
         } catch (Exception e) {
             LogUtil.error(CustomTimeZoneUtil.class.getName(), e, "Invalid timezone value [" + timeZone + "] → defaulting to UTC");
@@ -96,9 +96,9 @@ public class CustomTimeZoneUtil {
 
             String utcDateTime = outputFormat.format(date);
 
-            LogUtil.info(CustomTimeZoneUtil.class.getName(),
-                    "Converted [" + userDateTime + "] in timezone [" + userTimeZone +
-                            "] to UTC [" + utcDateTime + "]");
+//            LogUtil.info(CustomTimeZoneUtil.class.getName(),
+//                    "Converted [" + userDateTime + "] in timezone [" + userTimeZone +
+//                            "] to UTC [" + utcDateTime + "]");
 
             return utcDateTime;
 
