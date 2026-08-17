@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , FormLoadElementBinder, FormLoadMultiRowElementBinder {
 
@@ -142,12 +143,22 @@ public class LoadOrSyncEvent extends FormBinder implements FormLoadBinder , Form
 
 
             if (isAllDay) {
-                set(row, "fromDateField", startLocal.substring(0, 10));
-                set(row, "toDateField", endLocal.substring(0, 10));
+                LocalDate startDate = LocalDate.parse( extractDate(start.getString("dateTime")));
+                LocalDate graphEndDate = LocalDate.parse( extractDate(end.getString("dateTime")));
+                // Graph end is exclusive
+                LocalDate actualEndDate = graphEndDate.minusDays(1);
+                startLocal = startDate.toString();
+                endLocal   = actualEndDate.toString();
+//                LogUtil.info(getClass().getName(), startLocal);
+//                LogUtil.info(getClass().getName(), graphEndDate.toString());
+//                LogUtil.info(getClass().getName(), endLocal);
+
+                set(row, "fromDateField", startLocal);
+                set(row, "toDateField", endLocal);
+
             } else {
                 set(row, "fromDateTimeField", startLocal);
                 set(row, "toDateTimeField", endLocal);
-
             }
 
 

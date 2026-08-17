@@ -101,15 +101,21 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
                 String to;
 
                 if (isAllDay) {
-                    String startDate = row.getProperty(fromDateField);
-                    String endDate   = row.getProperty(toDateField);
+                    LocalDate startDate = LocalDate.parse(row.getProperty(fromDateField).substring(0, 10));
+                    LocalDate endDate = LocalDate.parse(row.getProperty(toDateField).substring(0, 10));
 
-                    // For all-day events, we keep the date but ensure it's in UTC format with Z
+                    if (endDate.isBefore(startDate)) {
+                        throw new IllegalArgumentException(
+                                "End date cannot be before start date"
+                        );
+                    }
+
+                    // Microsoft Graph treats all-day end date as exclusive
+                    LocalDate graphEndDate = endDate.plusDays(1);
+
                     from = startDate + "T00:00:00Z";
-                    to   = endDate + "T00:00:00Z";
-                    row.setProperty(fromDateField,from);
-                    row.setProperty(toDateField,to);
-                } else {
+                    to   = graphEndDate + "T00:00:00Z";
+                }else {
                     // Convert user local time to UTC
                     String fromDateTimeValue = row.getProperty(fromDateTimeField);
                     String toDateTimeValue   = row.getProperty(toDateTimeField);
