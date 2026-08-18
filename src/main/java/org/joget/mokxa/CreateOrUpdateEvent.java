@@ -120,12 +120,21 @@ public class CreateOrUpdateEvent extends FormBinder implements FormStoreBinder, 
                     String fromDateTimeValue = row.getProperty(fromDateTimeField);
                     String toDateTimeValue   = row.getProperty(toDateTimeField);
 
+                    LogUtil.info(getClass().getName(),"User input: "+fromDateTimeValue+" -> "+toDateTimeValue);
+
+
+
                     if (!use24Format) {
                         fromDateTimeValue = convert12HourTo24Hour(fromDateTimeValue);
                         toDateTimeValue   = convert12HourTo24Hour(toDateTimeValue);
                     }
+
+                    LogUtil.info(getClass().getName(),"User input Formating: "+fromDateTimeValue+" -> "+toDateTimeValue);
+
                     from = CustomTimeZoneUtil.convertUserZoneToUtc(fromDateTimeValue, CURRENT_USERNAME);
                     to   = CustomTimeZoneUtil.convertUserZoneToUtc(toDateTimeValue, CURRENT_USERNAME);
+
+                    LogUtil.info(getClass().getName(),"UTC input: "+from+" -> "+to);
 
                     row.setProperty(fromDateTimeField,from);
                     row.setProperty(toDateTimeField,to);
